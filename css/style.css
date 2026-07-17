@@ -1757,11 +1757,16 @@ body::after {
       CAPA SUPERIOR
 =============================*/
 
-header,
+/* Dejamos solo .page con posición relativa */
 .page {
   position: relative;
-
   z-index: 2;
+  padding-top: 6rem;
+}
+
+/* El header mantiene su z-index alto pero conserva su position: fixed del inicio */
+header {
+  z-index: 999; 
 }
 
 /*=============================
