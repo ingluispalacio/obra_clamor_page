@@ -1951,3 +1951,29 @@ input:focus {
       0 0 60px rgba(192, 57, 43, 0.6);
   }
 }
+
+/* ==========================================================
+                  FIRMA DE DESARROLLADOR
+========================================================== */
+
+.developer-credit {
+  display: inline-block;
+  margin-top: 10px;
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  opacity: 0.8;
+}
+
+.developer-credit a {
+  color: var(--text); /* O tu color de texto claro */
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.developer-credit a:hover {
+  color: var(--accent); /* Se ilumina en rojo como el resto de la web */
+  border-bottom-color: var(--accent);
+}
