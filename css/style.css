@@ -1061,29 +1061,22 @@ header.scrolled nav {
 /*==========================================================
                     CANVAS
 ==========================================================*/
-
 .canvas-wrapper {
-  margin-top: 35px;
-
-  display: flex;
-
-  justify-content: center;
+  width: 100%;
+  height: 450px; /* Altura ideal para ver bien los movimientos */
+  background-color: #111; /* Fondo oscuro que combina con el canvas */
+  border-radius: 8px; /* Bordes redondeados para mantener la estética */
+  overflow: hidden;
+  margin-top: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  position: relative;
 }
 
+/* El canvas ocupa el 100% de su envoltorio */
 #stageCanvas {
   width: 100%;
-
-  max-width: 900px;
-
-  height: 520px;
-
-  border: 3px solid var(--accent);
-
-  border-radius: 16px;
-
-  background: #111;
-
-  box-shadow: 0 0 35px rgba(192, 57, 43, 0.25);
+  height: 100%;
+  display: block;
 }
 
 /*==========================================================
@@ -1957,6 +1950,12 @@ input:focus {
   }
 }
 
+@media (max-width: 768px) {
+  .canvas-wrapper {
+    height: 350px; /* Un poco más pequeño en móviles para que quepa en pantalla */
+  }
+}
+
 /* ==========================================================
                   FIRMA DE DESARROLLADOR
 ========================================================== */
@@ -1981,4 +1980,27 @@ input:focus {
 .developer-credit a:hover {
   color: var(--accent); /* Se ilumina en rojo como el resto de la web */
   border-bottom-color: var(--accent);
+}
+
+/* ==========================================================
+   CONTENEDOR DE VIDEO RESPONSIVO (GOOGLE DRIVE)
+========================================================== */
+.lab-video-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9; /* Mantiene la proporción perfecta */
+  margin: 2rem 0 3.5rem 0; /* Separa el texto de arriba y la galería de abajo */
+  border-radius: 8px; /* O el border-radius que estés usando en tus imágenes */
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Sombra suave para darle profundidad */
+  background-color: #000; /* Fondo negro mientras carga el preview */
+}
+
+.lab-video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
 }

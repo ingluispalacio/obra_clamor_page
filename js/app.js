@@ -187,6 +187,7 @@ function animarContenido(elemento) {
   });
 }
 
+
 /*==========================================================
     PARTE 3: Canvas - Planimetría del escenario
 ==========================================================*/
@@ -204,11 +205,13 @@ function iniciarCanvas() {
   window.addEventListener("resize", resizeCanvas);
 
   let tiempo = 0;
+  
+  // 🌟 Mapeo de bailarines con sus respectivos nombres y estilos
   const bailarines = [
-    { color: "#e74c3c", radio: 12, x: 0, y: 0 },
-    { color: "#3498db", radio: 12, x: 0, y: 0 },
-    { color: "#f1c40f", radio: 12, x: 0, y: 0 },
-    { color: "#2ecc71", radio: 12, x: 0, y: 0 },
+    { nombre: "Luis", color: "#e74c3c", radio: 7, x: 0, y: 0 },
+    { nombre: "Jose S", color: "#3498db", radio: 7, x: 0, y: 0 },
+    { nombre: "Jose G", color: "#f1c40f", radio: 7, x: 0, y: 0 },
+    { nombre: "Johan", color: "#2ecc71", radio: 7, x: 0, y: 0 },
   ];
 
   function dibujarEscenario() {
@@ -220,7 +223,7 @@ function iniciarCanvas() {
     ctx.lineWidth = 4;
     ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
 
-    ctx.strokeStyle = "rgba(255,255,255,.08)";
+    ctx.strokeStyle = "rgba(255,255,255,.06)";
     ctx.lineWidth = 1;
 
     for (let i = 1; i < 4; i++) {
@@ -260,47 +263,58 @@ function iniciarCanvas() {
 
   function trayectorias() {
     ctx.save();
-    ctx.setLineDash([8, 8]);
+    ctx.setLineDash([6, 6]); // Línea punteada más limpia
     bailarines.forEach((b) => {
       ctx.beginPath();
-      ctx.arc(b.x, b.y, 28, 0, Math.PI * 2);
-      ctx.strokeStyle = b.color + "66";
-      ctx.lineWidth = 1.5;
+      ctx.arc(b.x, b.y, 24, 0, Math.PI * 2);
+      ctx.strokeStyle = b.color + "22"; // Opacidad reducida para no saturar la vista
+      ctx.lineWidth = 1.2;
       ctx.stroke();
     });
     ctx.restore();
   }
 
   function dibujarBailarines() {
-    bailarines.forEach((bailarin, index) => {
+    bailarines.forEach((bailarin) => {
+      // 1. Aura de brillo radial (Suave y rápida de renderizar)
       const gradiente = ctx.createRadialGradient(
-        bailarin.x, bailarin.y, 5,
-        bailarin.x, bailarin.y, 30
+        bailarin.x, bailarin.y, 2,
+        bailarin.x, bailarin.y, 25
       );
-      gradiente.addColorStop(0, bailarin.color);
+      gradiente.addColorStop(0, bailarin.color + "99");
       gradiente.addColorStop(1, "transparent");
 
       ctx.beginPath();
       ctx.fillStyle = gradiente;
-      ctx.arc(bailarin.x, bailarin.y, 30, 0, Math.PI * 2);
+      ctx.arc(bailarin.x, bailarin.y, 25, 0, Math.PI * 2);
       ctx.fill();
 
+      // 2. Punto central del intérprete
       ctx.beginPath();
       ctx.fillStyle = bailarin.color;
       ctx.arc(bailarin.x, bailarin.y, bailarin.radio, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "#fff";
-      ctx.font = "11px Roboto Mono";
+      // 3. Etiqueta de Nombre Flotante (Alta legibilidad)
+      ctx.save();
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 11px 'Roboto Mono', monospace";
       ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText(index + 1, bailarin.x, bailarin.y);
+      ctx.textBaseline = "bottom";
+      
+      // Sombra proyectada detrás del texto para que nunca se pierda con las grillas de fondo
+      ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
+      ctx.shadowBlur = 4;
+      
+      ctx.fillText(bailarin.nombre.toUpperCase(), bailarin.x, bailarin.y - 12);
+      ctx.restore();
     });
   }
 
   function dibujarTexto() {
     ctx.fillStyle = "#f5f0e8";
-    ctx.font = "16px Roboto Mono";
+    ctx.font = "14px 'Roboto Mono', monospace";
+    ctx.textAlign = "left";
     ctx.fillText("Vista Superior del Escenario", 30, 45);
   }
 
