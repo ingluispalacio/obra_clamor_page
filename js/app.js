@@ -189,7 +189,7 @@ function animarContenido(elemento) {
 
 
 /*==========================================================
-    PARTE 3: Canvas - Planimetría del escenario
+    PARTE 3: Canvas - Planimetría del escenario (CORREGIDO)
 ==========================================================*/
 function iniciarCanvas() {
   const canvas = document.getElementById("stageCanvas");
@@ -197,16 +197,22 @@ function iniciarCanvas() {
 
   const ctx = canvas.getContext("2d");
 
-  function resizeCanvas() {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+  
+  const resizeObserver = new ResizeObserver(() => {
+    if (canvas.clientWidth > 0 && canvas.clientHeight > 0) {
+      canvas.width = canvas.clientWidth;
+      canvas.height = canvas.clientHeight;
+    }
+  });
+  
+  // Ponemos a observar al contenedor del canvas (.canvas-wrapper)
+  if (canvas.parentElement) {
+    resizeObserver.observe(canvas.parentElement);
   }
-  resizeCanvas();
-  window.addEventListener("resize", resizeCanvas);
 
   let tiempo = 0;
   
-  // 🌟 Mapeo de bailarines con sus respectivos nombres y estilos
+  // Mapeo de bailarines con sus respectivos nombres y estilos
   const bailarines = [
     { nombre: "Luis", color: "#e74c3c", radio: 7, x: 0, y: 0 },
     { nombre: "Jose S", color: "#3498db", radio: 7, x: 0, y: 0 },
@@ -248,6 +254,9 @@ function iniciarCanvas() {
     const w = canvas.width;
     const h = canvas.height;
 
+    // Evitamos cálculos si el canvas aún no tiene tamaño real
+    if (w === 0 || h === 0) return;
+
     bailarines[0].x = w * 0.25 + Math.sin(tiempo) * 120;
     bailarines[0].y = h * 0.25 + Math.cos(tiempo * 1.2) * 80;
 
@@ -263,11 +272,11 @@ function iniciarCanvas() {
 
   function trayectorias() {
     ctx.save();
-    ctx.setLineDash([6, 6]); // Línea punteada más limpia
+    ctx.setLineDash([6, 6]);
     bailarines.forEach((b) => {
       ctx.beginPath();
       ctx.arc(b.x, b.y, 24, 0, Math.PI * 2);
-      ctx.strokeStyle = b.color + "22"; // Opacidad reducida para no saturar la vista
+      ctx.strokeStyle = b.color + "22";
       ctx.lineWidth = 1.2;
       ctx.stroke();
     });
@@ -276,7 +285,8 @@ function iniciarCanvas() {
 
   function dibujarBailarines() {
     bailarines.forEach((bailarin) => {
-      // 1. Aura de brillo radial (Suave y rápida de renderizar)
+      if (bailarin.x === 0 && bailarin.y === 0) return;
+
       const gradiente = ctx.createRadialGradient(
         bailarin.x, bailarin.y, 2,
         bailarin.x, bailarin.y, 25
@@ -289,23 +299,18 @@ function iniciarCanvas() {
       ctx.arc(bailarin.x, bailarin.y, 25, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Punto central del intérprete
       ctx.beginPath();
       ctx.fillStyle = bailarin.color;
       ctx.arc(bailarin.x, bailarin.y, bailarin.radio, 0, Math.PI * 2);
       ctx.fill();
 
-      // 3. Etiqueta de Nombre Flotante (Alta legibilidad)
       ctx.save();
       ctx.fillStyle = "#ffffff";
       ctx.font = "bold 11px 'Roboto Mono', monospace";
       ctx.textAlign = "center";
       ctx.textBaseline = "bottom";
-      
-      // Sombra proyectada detrás del texto para que nunca se pierda con las grillas de fondo
       ctx.shadowColor = "rgba(0, 0, 0, 0.9)";
       ctx.shadowBlur = 4;
-      
       ctx.fillText(bailarin.nombre.toUpperCase(), bailarin.x, bailarin.y - 12);
       ctx.restore();
     });
@@ -329,7 +334,6 @@ function iniciarCanvas() {
 
   animar();
 }
-
 /*==========================================================
     PARTE 4: Componentes Interactivos y Efectos Visuales
 ==========================================================*/
